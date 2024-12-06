@@ -1,0 +1,363 @@
+---
+title: "DISTRIBUSI DISKRIT : implementasi Excel, dan R-studio"
+author: "Syukron Faiz, Rafi Ramadhan Asshiddiqie, Muhammad fabian reinhard delano"
+date: "2024-12-06"
+output: html_document
+---
+
+::: {style="text-align: justify;"}
+1.1 DISTRIBUSI BINOMIAL  Distribusi binomial dalah distribusi yang digunakan dengan variabel acak diskrit. Distribusi peluang binomial adalah distribusi yang mempunyai dua macam kategori yaitu sukses dan gagal. Percobaan dalam distribusi ini dilakukan secara berulang – ulang sebanyak n kali dengan peluang sukses $$P\left(X=\ k\right)\binom{n}{k}p^k\ q^{n-k}$$ keterangan :  - n: banyaknya ulangan  - k: banyak keberhasilan dalam peubah acak X  - p: peluang berhasil pada setiap ulangan  - q: peluang gagal = 1 - p pada setiap ulangan
+
+ untuk memudahkan membedakan p dengan q, terlebih dahulu harus dapat menetapkan mana kejadian sukses mana yang gagal. Ditetapkan bahwa kejadian yang ditanyakan adalah = kejadian sukses
+
+[EXAMPLE]{.underline}
+
+ 1. Sekolah Pelita Harapan mengadakan suatu tes yang diikuti oleh 5 orang guru dengan tingkat kelulusannya adalah 0,6. Tentukan peluang ketika kondisi sebanyak 2 guru lulus.
+
+a.  pengerjaan manual
+
+$$P\left(X=\ k\right)\binom{n}{k}p^k\ q^{n-k}$$ $$P\left(X=\ 2\right)\binom{5}{2}{0,6}^2\ \left(1-0,6\right)^{5-2}$$ $$10\ \times\ 0,36\ \times\ 0,064=\ \ \ 0,2304$$
+
+b.  pengerjaan excel
+
+![](/Users/M.Fabian.R.D/Desktop/screenshot/Screen%20Shot%202024-12-06%20at%2021.58.19.png)
+
+c.  pengerjaan R-studio
+
+```{r,echo=TRUE,results='hide'}
+library(dplyr)
+x <- 2
+size <-5
+probabilitas <- 0.6
+
+dbinom(x, size = size, prob = probabilitas, log = FALSE)
+```
+
+1.2 DISTRIBUSI HYPERGEOMETRIK   Distribusi hipergeometrik merupakan distribusi data diskrti. Probabilitas suatu peristiwa pada percobaan yang akan mengahasilkandua macam peristiwa dependen memberikan probabilitas peristiwa yang berbeda pada setiap percobaan. Kondisi ini biasanya dijumpai pada percobaan yang dilakukan tanpa pengembalian dengan populasi terbatas. Distribusi hipergeometrik peristiwa tanpa pengembaliandengan populasi terbatas. Dengan kata lain, distribusi hipergeometrikmerupakan bentuk probabilitas tanpa pengembalian, yaitu setiap cuplikannya data yang telah diamati tidak dimasukkan kembali dalam populasi semula.
+
+ Percobaan hypergeometric memiliki beberapa sifat sebagai berikut :
+
+\- sebuah pengambilan acak dengan ukuran n dipilih tanpa pengembalian dari objek
+
+\- k dari n obyek dapat dapat diklasifikasikan sebagai sukses dan n dari k diklasifikasikan sebagai gagal
+
+ distribusi probabilitas dari variabel acak hypergeometrik X,jumlah suksesnya dalam sebuah pengambilan acak berukuran n yang dipilih dari N obyek dimana k obyek sebagai sukses dan N-k obyek sebagia gagal, diperoleh :
+
+$$
+h(x;N,n,k)=\frac{\binom{k}{x}\binom{N-k}{n-x}}{\binom{N}
+{n}} 
+$$
+
+ 1.2.1 implementasi dalam excel Tentu selain manual kita juga dapat mengerjakan distribusi hypergeometric dengan menggunakan excel dengan rumus hypergeometric sebagai berikut :
+
+$$
+= HYPGEOM.DIST(sample_x, number_sample, population_s, number_pop, cumulative)
+$$
+
+Keterangan :
+
+1\. Sample_s : Jumlah keberhasilan dalam sampel.
+
+2\. Number_sample : Ukuran sampel.
+
+3\. Population_s : Jumlah keberhasilan dalam populasi.
+
+4\. Number_pop : Ukuran populasi.
+
+5\. cumulative (diperlukan): Nilai logis yang menentukan jenis distribusi yang akan dihitung. Ini adalah nilai TRUE atau FALSE.Jika TRUE, HYPGEOM.DIST mengembalikan fungsi distribusi kumulatif, yang menghitung probabilitas paling banyak n keberhasilan dari sejumlah percobaan tertentu. Jika FALSE, HYPGEOM.DIST mengembalikan fungsi kepadatan probabilitas, yang menghitung probabilitas tepat n keberhasilan dari sejumlah percobaan tertentu.
+
+ 1.2.2 implementasi di r  a. pembuatan syntax
+
+```{r}
+N <- 0 # Ukuran populasi 
+K <- 0 # Jumlah elemen yang diinginkan dalam populasi 
+n <- 0 #  Ukuran sampel 
+k <- 0 # Jumlah elemen yang diinginkan dalam sampel 
+```
+
+ b. rumus hypergeometric di r
+
+```{r, echo=TRUE, results='hide'}
+dhyper
+# dengan memasukkan syntax sebagai berikut :
+dhyper(k, K, N-K, n)
+```
+
+[EXAMPLE]{.underline}
+
+1.  Suatu panitia 5 orang dipilih secara acak dari 3 kimiawan dan 5 fisikawan. Hitung distribusi probabilitas banyaknya kimiawan yang duduk dalam panitia. Dengan x = 0,1
+
+[Pengerjaan]{.underline}
+
+a.  secara manual
+
+ diketahui : x = 0, 1 ditanya : hitung probabilitas banyaknyakimiawan yang duduk dalam panitia
+
+[jawab]{.underline}
+
+$$
+h(x;8,5,3)=\frac{\binom{3}{x}\binom{5}{5-x}}{\binom{8}
+{5}} 
+$$ \$\$ X = 0 -\> h(x;8,5,3)=\frac{\binom{3}{0}\binom{5}{5}}{\binom{8}
+{5}}= {1/56} \$\$
+
+\$\$ X = 1 -\> h(x;8,5,3)=\frac{\binom{3}{1}\binom{5}{4}}{\binom{8}
+{5}}= {15/56}\$\$
+
+| x          | 0    | 1     |
+|------------|------|-------|
+| h(x;8,5,3) | 1/56 | 15/16 |
+
+b.  pengerjaan excel
+
+$$
+= HYPGEOM.DIST(0, 5, 3, 8, FALSE) => 0.017857143
+$$ - begitupun dengan pengerjaan dengan x = 1
+
+c.  pengerjaan secara R-studio
+
+```{r, echo=TRUE, results='hide'}
+# membuat syntax untuk nilai nilai berikut
+N <- 8
+n <- 5
+x1 <- 0
+x2 <- 1
+k <- 3
+# lalu membuat syntax dengan rumus hypergeometrik didalamnya 
+distribusi_hypgeom <- dhyper(x1,k,N-k,n ,log = FALSE)
+distribusi_hypgeom
+```
+
+1.3 DISTRIBUSI MULTINOMIAL
+
+ Distribusi multinomial merupakan salah satu distribusi yang paling umum digunakan pada Generalized Linear Model (GLM). Apabila 𝑛 percobaan berulang dapat menghasilkan lebih dari 2 outcome yang mungkin dengan probabilitas masing-masing konstan pada setiap percobaan, akan dihasilkan distribusi multinomial. fungsi probabilitas multinomial dapat dirumuskan sebagai berikut
+
+$$
+P(Yi = r1,r2,...,rk)=\frac{{r!}}{r1!r2!...r3!}\pi_{1}\pi_{2}...\phi k
+$$ dengan $$\sum_{i=1}^{k}\ rk = n \ dan \sum_{i=1}^{k}\ \pi_{i} = 1 $$
+
+1.3.1 implementasi dengan excel
+
+ Tentu sama dengan distribusi sebelumnya, Adapun Langkah-langkah pengerjaan distribusi multinomial dengan excel sebagai berikut(Umumnya excel tidak menyediakan perhitungan untk distribusi multinomial), tetapi kita dapat menghitung dengan langah Langkah berikut :
+
+1.  mengetik nilai $$x ( x = 1, x = 2, dll)$$
+2.  mengetik nilai peluang tiap $$x (p1 = \frac{x}{y}, dan\ seterusnya)$$
+3.  mengetik nilai peluang x yang didapat dengan memangkatkan nilai peluang tersebut sesuai urutan $$(p1^x = 0,…, dan\ seterusnya)$$
+4.  mencari nilai multinomial x dengan mengetik $$( = multinomial )$$
+5.  menghitung nilai probabiitasnya dengan rumus $$( = hasil\ multinomial \ x * PRODUCT(p1^x1 ; pn^xn)$$
+
+1.3.2 implementai dengan r studio
+
+ Terdapat juga cara oengerjaan untuk distribusi mutinomial dengan r-studio, sebagai berikut
+
+```{r,echo=TRUE,results='hide'}
+library(MASS) # run mass
+```
+
+a.  menulis syntax
+
+-   x \< - c(x) \# kejadian yang terjadi
+-   prob \<- c(p,...pn) \# nilai peluamg tiap percobaan, p2,…, pn
+-   size \<- \# berapa banyak percobaan yang dilakukan
+
+b.  rumus multinomial di r
+
+-   dmultinom, dengan memasukkan syntax sebagai berikut :
+-   dmultinom(x, size, c(prob))
+
+[EXAMPLE]{.underline}
+
+1.  Misalkan sebuah kantong berisi 8 bola: 3 merah, 1 hijau, dan 4 biru. Anda merogoh kantong, mengambil sebuah bola secara acak, lalu memasukkan bola kembali ke dalam kantong dan mengambil bola lainnya. Percobaan ini diulang sebanyak 10 kali. Berapa peluang bahwa hasilnya akan menghasilkan tepat 4 merah dan 6 biru?
+
+<!-- -->
+
+a.  pengerjaan manual
+
+$$
+f(4,0,6)=\frac{10!}{4!0!6!} (\frac{3}{8})^4(\frac{1}{8})^0(\frac{4}{8})^6 = 0.064888
+$$
+
+b.  pengerjaan excel
+
+![](Desktop/screenshot/Screen%20Shot%202024-12-06%20at%2020.15.47.png){width="300"}
+
+c.  pengerjaan R-studio
+
+```{r,echo=TRUE,results='hide'}
+prob2<-c(3/8, 4/8, 1/8)
+prob2
+size1 <- 10          
+x1 <- c(4,0,6) 
+
+# memunculkan hasil
+PROBABILITAS <- dmultinom(x1, size1, prob2)
+PROBABILITAS
+```
+
+1.4 Distribusi Binomial Negative
+
+ Distribusi binomial negatif adalah distribusi yang digunakan dengan variabel acak diskrit. Jenis distribusi ini menyangkut jumlah percobaan yang harus terjadi untuk memiliki jumlah keberhasilan yang telah ditentukan. Distribusi Binomial Negatif merupakan distribusi yang memiliki banyak cara dalam penurunannya, salah satunya adalah sebagai salah satu percobaan Bernoulli yang dibutuhkan sampai terjadi k buah sukses, dengan setiap pengulangannya saling bebas dimana probalitasnya gagal yaitu 1 − p dan probabilitas sukses p.
+
+ Jika peubah acak X menyatakan jumlah percobaan yang dibutuhkan sampai terjadi k sukses, maka distribusi probabilitas peubah acak X disebut berdistribusi Binomial Negatif dengan fungsi probabilitas sebagai berikut.
+
+$$
+P\left(X=k\right)=\binom{k-1}{r-1}p^r{(1-p)}^{k-r}
+$$
+
+ Dimana: - $$P\left(X=k\right)$$, adalah probabilitas bahwa dibutuhkan k percobaan untuk mendapatkan r keberhasilan. - $$\binom{k-1}{r-1} $$, adalah koefisien binomial yang menghitung cara memilih r-1 keberhasilan dari k-1 percobaan (karena keberhasilan ke-r harus terjadi pada percobaan ke-k).
+
+a.  pengerjaan manual :
+
+<!-- -->
+
+1.  Misalkan kita ingin menghitung probabilitas bahwa dibutuhkan 6 percobaan untuk mendapatkan 2 keberhasilan saat probabilitas keberhasilan pada setiap percobaan adalah p=0.2 $$
+    P\left(X=6\right)=\binom{6-1}{2-1}{0.2}^2{(1-0.2)}^{6-2}
+    $$ $$
+    P\left(X=6\right)=\left(\begin{matrix}5\\1\\\end{matrix}\right){0.2}^2{(0.8)}^4
+    $$ $$
+    P\left(X=6\right)=0,08192\ 
+    $$
+
+<!-- -->
+
+b.  pengerjaan excel
+
+ Sebuah dadu enam sisi dilempar. Berapa probabilitas bahwa Anda perlu melempar dadu sebanyak x kali sebelum mendapatkan 3 angka 6 pada dadu?
+
+-   $$r=3$$ (jumlah keberhasilan yang diinginkan)
+-   $$p=\frac{1}{6}$$ (probabilitas keberhasilan dalam satu percobaan)
+-   x (jumlah percobaan total yang dibutuhkan untuk mencapai 3 keberhasilan)
+
+Pengerjaan excel menggunakan fungsi $$ = {NEGBINOM}.{DIST}({x}-{r},{r},{p},{cumulative})$$
+
+-   x-r : percobaan gagal sebelum r keberhasilan
+-   r : Keberhasilan yang diinginkan
+-   p : Probabilitas keberhasilan dalam satu percobaan
+-   cumulative: *FALSE* untuk nilai probabilitas tunggal, *TRUE* untuk distribusi kumulatif.
+
+ Input data pada excel, misalkan kita menghitung probabilitas untuk $$x=5, 6, 7$$ \| prob.keberhasilan \| percobaan (x) \| gagal (x-r) \| keberhasilan (r) \| probabilitas \| \|---------------\|---------------\|---------------\|---------------\|---------------\| \| 0.167 \| 5 \| 2 \| 3 \| 0.0194 \| \| \| 6 \| 3 \| 3 \| 0.0269 \| \| \| 7 \| 4 \| 3 \| 0.0336 \|
+
+c.  pengerjaan menggunakan R studio :
+
+ Seorang salesman ingin menjual produk dan membutuhkan 5 keberhasilan sebelum mendapatkan bonus. Probabilitas menjual produk dalam satu percobaan adalah 0.2. Hitunglah:
+
+ 1. Probabilitas bahwa salesman memerlukan 8 percobaan untuk mendapatkan 5 penjualan (menggunakan dnbinom()).  2. Probabilitas kumulatif bahwa salesman memerlukan 8 atau kurang percobaan untuk mendapatkan 5 penjualan (menggunakan pnbinom()).
+
+```{r,echo=TRUE,results='hide'}
+# langkah 1
+size <- 5 # Jumlah keberhasilan yang diinginkan
+prob <- 0.2 # Probabilitas keberhasilan 
+```
+
+```{r,echo=TRUE,results='hide'}
+# langkah 2
+# 1. Probabilitas memerlukan 8 percobaan untuk mendapatkan 5 penjualan prob_8_percobaan 
+prob_8_percobaan <- dnbinom(3, size = size, prob = prob) # 3 kegagalan sebelum 5 keberhasilan 
+```
+
+```{r,echo=TRUE,results='hide'}
+# langkah 3
+# 2. Probabilitas kumulatif untuk 8 percobaan 
+prob_kumulatif_8 <- pnbinom(3, size = size, prob = prob) 
+```
+
+1.5 Distribusi Bernoulli
+
+ Distribusi Bernoulli adalah distribusi yang bersumber dari percobaan Bernoulli, yakni suatu percobaan yang menghasilkan dua kemungkinan hasil: Sukses dan Gagal. Contoh sederhana adalah pelemparan sebuah mata uang logam, di mana terdapat 2 kemungkinan hasil yang bisa diperoleh dari satu kali pelemparan, yaitu Angka dan Gambar.
+
+ Contoh lain misalnya, pada pengujian barang hasil produksi, dengan tiap pengujian atau usaha dapat menunjukkan apakah suatu barang cacat atau tidak cacat. Kita dapat menentukan atau memilih salah satu hasil sebagai sukses. Distribusi Bernoulli ini merupakan bentuk khusus distribusi Binomial jika $$n=1$$
+
+Karakteristik Percobaan Bernoulli:
+
+ - Dua Hasil: Setiap percobaan hanya memiliki dua hasil; biasanya disebut "sukses" (dengan probabilitas p) dan "gagal" (dengan probabilitas 1−p).
+
+ - Independensi: Setiap percobaan bersifat independen, artinya hasil dari satu percobaan tidak memengaruhi hasil percobaan lainnya.
+
+ - Probabilitas Tetap: Probabilitas sukses p tetap sama untuk setiap percobaan. $$
+P\left(X=k\right)=p         jika k=1 (sukses)1-p    jika k=0 (gagal)
+$$
+
+a.  pengerjaan manual
+
+ Misalkan kita melempar koin yang adil. Jika kita mendefinisikan "kepala" sebagai sukses, maka:
+
+\- Probabilitas mendapatkan kepala,$$p=0.5$$- Probabilitas mendapatkan ekor, $$1−p=0.5$$
+
+Jika kita ingin menghitung probabilitas mendapatkan kepala (sukses), maka: $$P\left(X=1\right)=p=0.5$$ dan untuk mendapatkan ekor (gagal): $$P\left(X=0\right)=1-p=0.5$$
+
+b.  pengerjaan excel
+
+ Misalkan kita sedang mempelajari apakah seseorang akan membeli tas. Probabilitas seseorang membeli tas (X=1) adalah 0,7 (p=0,7), sedangkan probabilitas tidak membeli tas (X=0) adalah 0,3 (1-p).
+
+Buat tabel dengan struktur seperti berikut:
+
+| percobaan | probabilitas | p   |
+|-----------|--------------|-----|
+| 0         | = 1-p        | 0.7 |
+| 1         | = p          |     |
+
+hasil tabel :
+
+| percobaan | probabilitas | p   |
+|-----------|--------------|-----|
+| 0         | 0.3          | 0.7 |
+| 1         | 0.7          |     |
+
+pakai fungsi $${RAND}$$ untuk menghasilkan bilangan acak, lalu gunakan logika untuk menentukan hasil simulasi. Pada kolom baru buat $$fungsi ={IF}{RAND}()\ <= 0.7,1,0)$$
+
+Hasilnya adalah 1 (keberhasilan) dengan probabilitas 0.7 atau 0 (kegagalan) dengan probabilitas 0.3.
+
+c.  pengerjaan R-studio
+
+ Sebuah perusahaan meluncurkan produk baru dan memperkirakan bahwa ada probabilitas 70% bahwa konsumen akan menyukainya. Hitunglah:
+
+ 1. Probabilitas bahwa produk disukai (menggunakan dbern()).  2. Probabilitas bahwa produk tidak disukai (menggunakan pbern()).
+
+```{r,echo=TRUE,results='hide'}
+# langkah 1 
+# 1. Menghitung probabilitas produk disukai
+library(extraDistr)
+p <- 0.7 # Probabilitas produk disukai
+prob_disukai <- dbern(1, prob = p) # dbern() untuk sukses (1)
+```
+
+```{r,echo=TRUE,results='hide'}
+# langkah 2
+# 2. Menghitung probabilitas produk tidak disukai 
+prob_tidak_disukai <- pbern(0, prob = p) # pbern() untuk kegagalan (0) 
+```
+
+1.6 Distribusi Poisson
+
+ Distribusi Poisson adalah percobaan yang menghasilkan nilai numerik pada suatu variabel acak x, jumlah keluaran yang terjadi selama suatu selang waktu yang diketahui atau di dalam suatu daerah (ruang) yang ditentukan disebut sebagai percobaan Poisson, sehingga sebuah percobaan Poisson dapat memunculkan pengamatan untuk peubah acak x.
+
+$$P\left(X\right)=\ \frac{e^{-\lambda}\lambda^x}{x!}$$ Dimana:  - P(x) = probabilitas kelas sukses  -𝜆 = rata-rata keberhasilan =n . p  - x = Banyaknya unsur berhasil dalam sampel atau variable random diskrit  - e = Konstanta= 2,7182  - n = jumlah/ukuran populasi  - t = banyaknya satuan waktu
+
+[EXAMPLE]{.underline}
+
+1.  Jumlah Kesalahan Produksi. Deskripsi: Dalam Proses Produksi, Rata-Rata Kesalahan Yang Terjadi Adalah 2 Kesalahan Per Jam.Hitunglah:  - Probabilitas Bahwa Terjadi 3 Kesalahan Dalam Satu Jam.  - Probabilitas Kumulatif Bahwa Terjadi 3 Atau Kurang Kesalahan Dalam Satu Jam.  - Nilai Threshold Untuk Mendapatkan 95% Probabilitas Dari Jumlah Kesalahan.  - Simulasi Untuk Jumlah Kesalahan Dalam 8 Jam (Cari Means Dan Varians Nya).
+
+<!-- -->
+
+a.  pengerjaan manual  1. Probabilitas Bahwa Terjadi 3 Kesalahan Dalam Satu Jam. $$P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}$$ $$P(X = 3) = \frac{2^3 e^{-2}}{3!}$$  2. Probabilitas Kumulatif Bahwa Terjadi 3 Atau Kurang Kesalahan Dalam Satu Jam. $$P(X \leq 3) = P(X = 0) + P(X = 1) + P(X = 2) + P(X = 3)$$  3. Untuk periode 8 jam, rata-rata menjadi $$λ=2×8=16.$$
+
+b.  pengerjaan excel  1. Probabilitas Bahwa Terjadi 3 Kesalahan Dalam Satu Jam. ![](/Users/M.Fabian.R.D/Desktop/PRAKTIKUM%20ASLAB/praktikum/distribusi%20poisson/Screen%20Shot%202024-12-06%20at%2022.18.54.png)  2. Probabilitas Kumulatif Bahwa Terjadi 3 Atau Kurang Kesalahan Dalam Satu Jam. ![](/Users/M.Fabian.R.D/Desktop/PRAKTIKUM%20ASLAB/praktikum/distribusi%20poisson/Screen%20Shot%202024-12-06%20at%2022.20.07.png)  3. Untuk periode 8 jam, rata-rata menjadi ![](/Users/M.Fabian.R.D/Desktop/PRAKTIKUM%20ASLAB/praktikum/distribusi%20poisson/Screen%20Shot%202024-12-06%20at%2022.21.22.png)
+
+c.  pengerjaan R-studio
+
+```{r,echo=TRUE,results='hide'}
+library(dplyr)
+Lambda <- 2 #Kesalahan Per Jamnya Print(Lambda)
+Probabilitas_1 <- dpois(3, lambda = Lambda)
+```
+
+```{r,echo=TRUE,results='hide'}
+# Probabilitas Kumulatif Bahwa Terjadi 3 Atau Kurang Kesalahan Dalam Satu Jam.
+Prob_Kum <- ppois(3, lambda = Lambda) 
+```
+
+```{r,echo=TRUE,results='hide'}
+# Simulasi Untuk Jumlah Kesalahan Dalam 8 Jam (Cari Means Dan Varians Nya).
+Simulasi_8jam_Kesalahan <- rpois(8,lambda = Lambda) 
+```
+:::
